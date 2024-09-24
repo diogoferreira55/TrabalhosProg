@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="scoreboard.css">
+    <title>Scoreboard</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var nome_jogador='';
+            $.get("_session.php", function(data, status){
+                nome_jogador = data;
+                //alert(nome_jogador);   
+            }); 
+                     
+            function updateScoreboard(selectedTime, selectedDifficulty) {
+                if (selectedTime == "") 
+                {
+                    selectedTime = "tempo_10";
+                }
+                $.ajax({
+                    url: 'get_score.php',
+                    type: 'GET',
+                    data: { tabela: selectedTime, dificuldade: selectedDifficulty },
+                    success: function(response) {
+                        $('#scoreboard').html(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        $('#scoreboard').html('Erro ao carregar dados do scoreboard.');
+                    }
+                });
+            }
+            $(document).ready(function() {
+                var nomeJogador = localStorage.getItem('nome_jogador');
+                if (nomeJogador) {
+                    $('#nome_jogador').val(nomeJogador);
+                    console.log($('#nome_jogador'))
+                }
+            });
+            var selectedTime = "tempo_10";
+            var selectedDifficulty = "facil"
+
+            $('#tempo_10').addClass('clicked');
+            $('#facil').addClass('clicked');
+            $('#tempo_10, #tempo_30, #tempo_1m, #tempo_2m').click(function() {
+                $('#tempo_10, #tempo_30, #tempo_1m, #tempo_2m').removeClass('clicked');
+                $(this).addClass('clicked');
+                selectedTime = $(this).attr('id');
+                updateScoreboard(selectedTime, selectedDifficulty); 
+            });
+
+
+            $('#facil, #medio, #dificil').click(function() {
+                $('#facil, #medio, #dificil').removeClass('clicked');
+                $(this).addClass('clicked');
+                selectedDifficulty = $(this).attr('id');
+                updateScoreboard(selectedTime, selectedDifficulty);
+            });
+
+
+            updateScoreboard('', 'facil');
+
+        });
+    </script>
+
+    <style> 
+        :root{
+            --primary-color: lightblue;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            flex: 1;
+        }
+
+        .button-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .button-list li {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        .button-list li button {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .button-list li button.clicked {
+            background-color: #28a745;
+        }
+        #message {
+            font-size: 25px;
+        }
+
+        .btn {
+            min-width: 190px;
+            color: white;
+            background-color: transparent;
+            border: 3px solid white;
+            padding: 0.5em 1em;
+            font-size: 1.5em;
+            cursor: crosshair;
+            position: fixed;
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%); 
+        }
+
+        .btn:hover {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Scoreboard</h1>
+    <div class="button-container">
+        <div class="button-group">
+            <p id="message">Escolha um tempo:</p>
+            <ul class="button-list">
+                <li><button type="button" id="tempo_10" value="tempo_10 clicked">10s</button></li>
+                <li><button type="button" id="tempo_30" value="tempo_30">30s</button></li>
+                <li><button type="button" id="tempo_1m" value="tempo_1m">1 Minuto</button></li>
+                <li><button type="button" id="tempo_2m" value="tempo_2m">2 Minutos</button></li>
+            </ul>
+        </div>
+        <div class="button-group">
+            <p id="message">Escolha uma dificuldade:</p>
+            <ul class="button-list">
+                <li><button type="button" id="facil" value="facil clicked">Fácil</button></li>
+                <li><button type="button" id="medio" value="medio">Médio</button></li>
+                <li><button type="button" id="dificil" value="dificil">Difícil</button></li>        
+            </ul>
+        </div>
+    </div>
+    <div id="scoreboard"></div>
+    <a class="btn" href="./index.html">Voltar</a></body>
+</html>

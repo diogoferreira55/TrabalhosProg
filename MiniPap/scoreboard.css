@@ -1,0 +1,43 @@
+body{
+    height: 100px;
+    color: white;
+    overflow: hidden;
+    text-align: center;
+    font-family: "Monteserrat",sans-serif;
+    background-color: #1e1f26;
+}
+table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: separate;
+    border: 1px solid #ddd;
+    text-align: center;
+    background-color: #1e1f26;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+th:last-child, td:last-child {
+    border-right: none;
+}
+
+tr:last-child th, tr:last-child td {
+    border-bottom: none;
+}
+
+table th {
+    background-color: #1e1f26;
+    color: #fff;
+}
+
+table caption {
+    caption-side: top;
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 0;
+}
